@@ -1,4 +1,5 @@
-﻿using SamuraiApp.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SamuraiApp.Data;
 using SamuraiApp.Domain;
 using System;
 using System.Linq;
@@ -12,9 +13,8 @@ namespace SamuraiApp.UI
         private static void Main(string[] args)
         {
             _context.Database.EnsureCreated();
-            GetSamurais("Before");
-            AddSamurai();
-            GetSamurais("After");
+            AddSamurai("Bri","Alex");
+            GetSamurais();
             Console.Write("Press any key...");
             Console.ReadKey();
         }
@@ -22,21 +22,25 @@ namespace SamuraiApp.UI
         /// <summary>
         /// Add a new Samurai named "Sampson" to the Samurai DB
         /// </summary>
-        private static void AddSamurai()
+        /// <param name="names">array of names that will createa new Samurai for each</param>
+        private static void AddSamurai(params string[] names)
         {
-            var samurai = new Samurai { Name = "Alex" };
-            _context.Samurais.Add(samurai);
+            foreach (var name in names)
+            {
+                _context.Samurais.Add(new Samurai { Name = name });
+            }
             _context.SaveChanges();
         }
 
         /// <summary>
         /// Get all Samurai from the DB returning their count and names
         /// </summary>
-        /// <param name="text">Custom text to put befroe the samurai count</param>
-        private static void GetSamurais(string text)
+        private static void GetSamurais()
         {
-            var samurais = _context.Samurais.ToList();
-            Console.WriteLine($"{text}: Samurai count is {samurais.Count}");
+            var samurais = _context.Samurais
+                .TagWith("ConsoleApp.Program.GetSamurais method")
+                .ToList();
+            Console.WriteLine($"Samurai count is {samurais.Count}");
             foreach(var samurai in samurais)
                 Console.WriteLine(samurai.Name);
         }
