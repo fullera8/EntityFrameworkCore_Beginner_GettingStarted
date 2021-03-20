@@ -16,7 +16,8 @@ namespace SamuraiApp.UI
             //AddSamurai("Bri3","Alex3", "Ashlyn", "Wes");
             //AddVariousTypes();
             //GetSamurais();
-            QueryFilters();
+            //QueryFilters();
+            QueryAggregates();
             //Console.Write("Press any key...");
             //Console.ReadKey();
         }
@@ -51,6 +52,13 @@ namespace SamuraiApp.UI
             var likeName = "A";
             //var samurais = _context.Samurais.Where(s => s.Name == name).ToList();
             var samurais = _context.Samurais.Where(s => EF.Functions.Like(s.Name, $"{likeName}%")).ToList();
+        }
+
+        private static void QueryAggregates()
+        {
+            var name = "Alex2";
+            //var samurai = _context.Samurais.FirstOrDefault(s => s.Name == name);//LINQ special syntax for where top 1
+            var samurai = _context.Samurais.Find(2);//Finds objects stored in memory so we do not need to query DB.
         }
 
         /// <summary>
