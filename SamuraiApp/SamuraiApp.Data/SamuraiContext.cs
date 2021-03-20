@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SamuraiApp.Domain;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,13 @@ namespace SamuraiApp.Data
         /// <param name="optionsBuilder">Default Db context options builder, defines db connection properties.</param>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source= (localdb)\\MSSQLLocalDB; Initial Catalog=SamuraiAppData"); //How to connect to sql server
+            optionsBuilder
+                .UseSqlServer("Data Source= (localdb)\\MSSQLLocalDB; Initial Catalog=SamuraiAppData") //How to connect to sql server
+                .LogTo(Console.Write,
+                    new[] {DbLoggerCategory.Database.Command.Name},//Logs everything to the profiler
+                    LogLevel.Information) //Filter down to DB commands only (along with meta data about their execution)
+                .EnableSensitiveDataLogging(); //Unhides paramters passed between methods
+
         }
 
         /// <summary>
