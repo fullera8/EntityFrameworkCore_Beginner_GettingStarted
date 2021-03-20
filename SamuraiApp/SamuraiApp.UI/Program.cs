@@ -14,10 +14,11 @@ namespace SamuraiApp.UI
         {
             _context.Database.EnsureCreated();
             //AddSamurai("Bri3","Alex3", "Ashlyn", "Wes");
-            AddVariousTypes();
-            GetSamurais();
-            Console.Write("Press any key...");
-            Console.ReadKey();
+            //AddVariousTypes();
+            //GetSamurais();
+            QueryFilters();
+            //Console.Write("Press any key...");
+            //Console.ReadKey();
         }
 
         /// <summary>
@@ -42,6 +43,14 @@ namespace SamuraiApp.UI
                 new Battle { Name = "Battle of NASA" }
             );
             _context.SaveChanges();
+        }
+
+        private static void QueryFilters()
+        {
+            var name = "Alex2";
+            var likeName = "A";
+            //var samurais = _context.Samurais.Where(s => s.Name == name).ToList();
+            var samurais = _context.Samurais.Where(s => EF.Functions.Like(s.Name, $"{likeName}%")).ToList();
         }
 
         /// <summary>
