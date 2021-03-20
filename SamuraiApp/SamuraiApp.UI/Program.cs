@@ -10,6 +10,7 @@ namespace SamuraiApp.UI
     class Program
     {
         private static SamuraiContext _context = new SamuraiContext();
+        private static SamuraiContextNoTracking _contextNT = new SamuraiContextNoTracking();
 
         private static void Main(string[] args)
         {
@@ -23,7 +24,8 @@ namespace SamuraiApp.UI
             //RetrieveAndUpdateMultipleSamurai();
             //MultipleDatabaseOperations();
             //DeleteSamurai();
-            QueryAndUpdateBattles_disconnected();
+            //QueryAndUpdateBattles_disconnected();
+            QueryFiltersNT();
             //Console.Write("Press any key...");
             //Console.ReadKey();
         }
@@ -58,6 +60,14 @@ namespace SamuraiApp.UI
             var likeName = "A";
             //var samurais = _context.Samurais.Where(s => s.Name == name).ToList();
             var samurais = _context.Samurais.Where(s => EF.Functions.Like(s.Name, $"{likeName}%")).ToList();
+        }
+
+        private static void QueryFiltersNT()
+        {
+            var name = "Alex2";
+            var likeName = "A";
+            //var samurais = _context.Samurais.Where(s => s.Name == name).ToList();
+            var samurais = _contextNT.Samurais.Where(s => EF.Functions.Like(s.Name, $"{likeName}%")).ToList();
         }
 
         private static void QueryAggregates()
