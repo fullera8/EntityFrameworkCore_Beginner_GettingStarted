@@ -17,7 +17,10 @@ namespace SamuraiApp.UI
             //AddVariousTypes();
             //GetSamurais();
             //QueryFilters();
-            QueryAggregates();
+            //QueryAggregates();
+            //RetrieveAndUpdateSamurai();
+            //RetrieveAndUpdateMultipleSamurai();
+            MultipleDatabaseOperations();
             //Console.Write("Press any key...");
             //Console.ReadKey();
         }
@@ -59,6 +62,28 @@ namespace SamuraiApp.UI
             var name = "Alex2";
             //var samurai = _context.Samurais.FirstOrDefault(s => s.Name == name);//LINQ special syntax for where top 1
             var samurai = _context.Samurais.Find(2);//Finds objects stored in memory so we do not need to query DB.
+        }
+
+        private static void RetrieveAndUpdateSamurai()
+        {
+            var samurai = _context.Samurais.FirstOrDefault(); //Get first samurai 
+            samurai.Name += "San"; //Append San to the end of their name
+            _context.SaveChanges(); //Save that new name
+        }
+
+        private static void RetrieveAndUpdateMultipleSamurai()
+        {
+            var samurais = _context.Samurais.Skip(1).Take(7).ToList();//LINQ to get the 2-8 values in the Samurai table
+            samurais.ForEach(s => s.Name += "San"); //Append the "San" to the end of each Name
+            _context.SaveChanges(); //Update the values
+        }
+
+        private static void MultipleDatabaseOperations()
+        {
+            var samurai = _context.Samurais.FirstOrDefault();
+            samurai.Name += "San";
+            _context.Samurais.Add(new Samurai { Name = "Shino" });
+            _context.SaveChanges();
         }
 
         /// <summary>
