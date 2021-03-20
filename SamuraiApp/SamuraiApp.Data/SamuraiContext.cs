@@ -22,5 +22,22 @@ namespace SamuraiApp.Data
         {
             optionsBuilder.UseSqlServer("Data Source= (localdb)\\MSSQLLocalDB; Initial Catalog=SamuraiAppData"); //How to connect to sql server
         }
+
+        /// <summary>
+        /// Explicitly defines the relationship between battles and samurais many to many relationship
+        /// and uses the BattleSamurai class as the controller for the SQL table
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Samurai>()
+                .HasMany(s => s.Battles) 
+                .WithMany(b => b.Samurais)
+                .UsingEntity<BattleSamurai> //Defines the related table (one to many on each side)
+                    (bs => bs.HasOne<Battle>().WithMany(),
+                    bs => bs.HasOne<Samurai>().WithMany())
+                .Property(bs => bs.DateJoined)
+                .HasDefaultValueSql("getdate()");//This property will need to populate by default so we need to give it specific behavior
+        }
     }
 }
