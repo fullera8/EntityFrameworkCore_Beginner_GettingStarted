@@ -2,6 +2,7 @@
 using SamuraiApp.Data;
 using SamuraiApp.Domain;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SamuraiApp.UI
@@ -21,7 +22,8 @@ namespace SamuraiApp.UI
             //RetrieveAndUpdateSamurai();
             //RetrieveAndUpdateMultipleSamurai();
             //MultipleDatabaseOperations();
-            DeleteSamurai();
+            //DeleteSamurai();
+            QueryAndUpdateBattles_disconnected();
             //Console.Write("Press any key...");
             //Console.ReadKey();
         }
@@ -92,6 +94,32 @@ namespace SamuraiApp.UI
             var samurai = _context.Samurais.Find(8); //Get first samurai 
             _context.Samurais.Remove(samurai); //Append San to the end of their name
             _context.SaveChanges(); //Save that new name
+        }
+
+        
+        /// <summary>
+        /// Updates the dates of battles locally by first getting the context, manipulating the data
+        /// and opening a second context witht the new data and saving it. Important to note this will only 
+        /// work with context classes. Working with a class directly will open and update the db on the fly
+        /// </summary>
+        private static void QueryAndUpdateBattles_disconnected()
+        {
+            List<Battle> diconnectedBattles;
+            using (var context1 = new SamuraiContext())
+                {
+                    diconnectedBattles = _context.Battles.ToList();
+                }
+            diconnectedBattles.ForEach(b =>
+                {
+                    b.StartDate = new DateTime(1570, 01, 01);
+                    b.EndDate = new DateTime(1570, 12, 01);
+                });
+            using (var context2 = new SamuraiContext())
+                {
+                    context2.UpdateRange(diconnectedBattles);
+                    context2.SaveChanges();
+                }
+
         }
 
         /// <summary>
