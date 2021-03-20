@@ -20,7 +20,8 @@ namespace SamuraiApp.UI
             //QueryAggregates();
             //RetrieveAndUpdateSamurai();
             //RetrieveAndUpdateMultipleSamurai();
-            MultipleDatabaseOperations();
+            //MultipleDatabaseOperations();
+            DeleteSamurai();
             //Console.Write("Press any key...");
             //Console.ReadKey();
         }
@@ -84,6 +85,13 @@ namespace SamuraiApp.UI
             samurai.Name += "San";
             _context.Samurais.Add(new Samurai { Name = "Shino" });
             _context.SaveChanges();
+        }
+
+        private static void DeleteSamurai()
+        {
+            var samurai = _context.Samurais.Find(8); //Get first samurai 
+            _context.Samurais.Remove(samurai); //Append San to the end of their name
+            _context.SaveChanges(); //Save that new name
         }
 
         /// <summary>
