@@ -29,7 +29,8 @@ namespace SamuraiApp.UI
             //InsertNewSamuraiWithAQuote();
             //InsertNewSamuraiWithManyQuotes();
             //AddQuoteToExistingSamuraiWhileTracked();
-            AddQuoteToExistingSamuraiWhileNotTracked(2);
+            //AddQuoteToExistingSamuraiWhileNotTracked(2);
+            EagerLoadSamuraiWithQuotes();
             //Console.Write("Press any key...");
             //Console.ReadKey();
         }
@@ -196,7 +197,8 @@ namespace SamuraiApp.UI
             var samurai = _context.Samurais.Find(samuraiId);
             samurai.Quotes.Add(new Quote
             {
-                Text = "What's for dinner?"
+                //Text = "What's for dinner?"
+                Text = "Thanks for dinner!"
             });
 
             using (var newContext = new SamuraiContext())
@@ -204,6 +206,29 @@ namespace SamuraiApp.UI
                 newContext.Samurais.Attach(samurai);
                 newContext.SaveChanges();
             }
+        }
+
+        private static void EagerLoadSamuraiWithQuotes()
+        {
+            //var samuraiWithQuotes = _context.Samurais.Include(s => s.Quotes).ToList();
+            //var splitQuery = _context.Samurais.AsSplitQuery().Include(s => s.Quotes).ToList();
+            //var filterInclude = _context.Samurais
+            //    .Include(s => s.Quotes //Include returns the whole set, then you filter from there.
+            //        .Where(q => q.Text
+            //            .Contains("Thanks")))
+            //    .ToList();
+
+            //var filterOnlyOneValue = _context.Samurais
+            //    .Where(s => s.Quotes //Where filters on the db level. Recommended approach for data filter efficency.
+            //        .Any(q => q.Text
+            //            .Contains("Thanks")))
+            //    .ToList();
+
+            var filterPrimaryEntityAndInclude = _context.Samurais
+                .Where(s => s.Name.Contains("Alex"))
+                    .Include(s => s.Quotes)
+                .FirstOrDefault();
+            //Where(i => i.Quotes.Any(j => j.Text.Contains("term")))
         }
     }
 }
