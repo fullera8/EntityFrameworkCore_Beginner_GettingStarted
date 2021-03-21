@@ -30,7 +30,8 @@ namespace SamuraiApp.UI
             //InsertNewSamuraiWithManyQuotes();
             //AddQuoteToExistingSamuraiWhileTracked();
             //AddQuoteToExistingSamuraiWhileNotTracked(2);
-            EagerLoadSamuraiWithQuotes();
+            //EagerLoadSamuraiWithQuotes();
+            ProjectLimitedProperties();
             //Console.Write("Press any key...");
             //Console.ReadKey();
         }
@@ -229,6 +230,28 @@ namespace SamuraiApp.UI
                     .Include(s => s.Quotes)
                 .FirstOrDefault();
             //Where(i => i.Quotes.Any(j => j.Text.Contains("term")))
+        }
+
+        private static void ProjectLimitedProperties()
+        {
+            //var limitedProperties = _context.Samurais.Select(s => 
+            //    new { 
+            //            s.Id, 
+            //            s.Name, 
+            //        }
+            //    ).ToList();
+
+            //Filters and creates custom query directly in SQL.
+            var customProperties = _context.Samurais.Select(s =>
+                new 
+                {
+                    //s.Id,
+                    //s.Name,
+                    Samurai = s,
+                    //NumberOfQuotes = s.Quotes.Count
+                    dinnerQuotes = s.Quotes.Where(q => q.Text.Contains("Dinner"))
+                }
+                ).ToList();
         }
     }
 }
