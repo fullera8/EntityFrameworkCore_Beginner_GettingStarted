@@ -33,7 +33,9 @@ namespace SamuraiApp.UI
             //EagerLoadSamuraiWithQuotes();
             //ProjectLimitedProperties();
             //ExplicitLoadFromMemory();
-            LazyLoadQuotes();
+            //LazyLoadQuotes();
+            //ModifyRelatedDataWhenTracked();
+            ModifyRelatedDataWhenNotTracked();
             //Console.Write("Press any key...");
             //Console.ReadKey();
         }
@@ -277,6 +279,30 @@ namespace SamuraiApp.UI
                 2. Add the Microsoft.EntityFramwork.Proxies package
                 3. DbContext OnConfiguring optionsBuilder.UserLazyLoadingProxies()
              */
+        }
+
+        private static void ModifyRelatedDataWhenTracked()
+        {
+            var samurai = _context.Samurais.Include(s => s.Quotes)
+                .FirstOrDefault(s => s.Id == 2);
+            samurai.Quotes[0].Text = "Did you hear that?"; //Notice that the Tracked method can modify directly
+            _context.Quotes.Remove(samurai.Quotes[2]);
+            _context.SaveChanges();
+        }
+
+        private static void ModifyRelatedDataWhenNotTracked()
+        {
+            var samurai = _context.Samurais.Include(s => s.Quotes)
+                .FirstOrDefault(s => s.Id == 2);
+            var quote = samurai.Quotes[0];
+            quote.Text += " Did you hear that again?";
+
+            using (var newContext = new SamuraiContext())
+            {
+                //newContext.Quotes.Update(quote); //This will update all quotes because the context had set the entry state to modified before
+                newContext.Entry(quote).State = EntityState.Modified; //State must be explicitly state when jumping context.
+                newContext.SaveChanges();
+            }
         }
     }
 }
