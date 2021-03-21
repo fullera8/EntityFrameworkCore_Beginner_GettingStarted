@@ -31,7 +31,9 @@ namespace SamuraiApp.UI
             //AddQuoteToExistingSamuraiWhileTracked();
             //AddQuoteToExistingSamuraiWhileNotTracked(2);
             //EagerLoadSamuraiWithQuotes();
-            ProjectLimitedProperties();
+            //ProjectLimitedProperties();
+            //ExplicitLoadFromMemory();
+            LazyLoadQuotes();
             //Console.Write("Press any key...");
             //Console.ReadKey();
         }
@@ -252,6 +254,29 @@ namespace SamuraiApp.UI
                     dinnerQuotes = s.Quotes.Where(q => q.Text.Contains("Dinner"))
                 }
                 ).ToList();
+        }
+
+        private static void ExplicitLoadFromMemory()
+        {
+            _context.Set<Horse>().Add(new Horse { SamuraiId = 1, Name = "Bullseye" });
+            _context.SaveChanges();
+            _context.ChangeTracker.Clear();
+            ////////////////////////////////////////////////////////////////////////////
+            var samurai = _context.Samurais.Find(1); //Get the samurai from DB
+            _context.Entry(samurai).Collection(s => s.Quotes).Load(); //Exlpicitly use properties loaded into memory
+            _context.Entry(samurai).Reference(s => s.Horse).Load(); //Exlpicitly use references loaded into memory
+        }
+
+        private static void LazyLoadQuotes()
+        {
+            var samurai = _context.Samurais.Find(2);
+            var quoteCount = samurai.Quotes.Count(); //Need to enable lazy loading for this to work
+            /*
+             Steps to enable lazy loading:
+                1. Every navigation must be set to virtual
+                2. Add the Microsoft.EntityFramwork.Proxies package
+                3. DbContext OnConfiguring optionsBuilder.UserLazyLoadingProxies()
+             */
         }
     }
 }
