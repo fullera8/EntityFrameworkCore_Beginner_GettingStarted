@@ -37,14 +37,14 @@ namespace SamuraiApp.Data
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Samurai>()
-                .HasMany(s => s.Battles) 
-                .WithMany(b => b.Samurais)
-                .UsingEntity<BattleSamurai> //Defines the related table (one to many on each side)
-                    (bs => bs.HasOne<Battle>().WithMany(),
-                    bs => bs.HasOne<Samurai>().WithMany())
-                .Property(bs => bs.DateJoined)
-                .HasDefaultValueSql("getdate()");//This property will need to populate by default so we need to give it specific behavior
+            //modelBuilder.Entity<Samurai>()
+            //    .HasMany(s => s.Battles) 
+            //    .WithMany(b => b.Samurais)
+            //    .UsingEntity<BattleSamurai> //Defines the related table (one to many on each side)
+            //        (bs => bs.HasOne<Battle>().WithMany(),
+            //        bs => bs.HasOne<Samurai>().WithMany())
+            //    .Property(bs => bs.DateJoined)
+            //    .HasDefaultValueSql("getdate()");//This property will need to populate by default so we need to give it specific behavior
         }
     }
 }

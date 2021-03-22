@@ -16,6 +16,7 @@ namespace SamuraiApp.UI
         {
             _context.Database.EnsureCreated();
             //AddSamurai("Bri3","Alex3", "Ashlyn", "Wes");
+
             //AddVariousTypes();
             //GetSamurais();
             //QueryFilters();
@@ -35,9 +36,15 @@ namespace SamuraiApp.UI
             //ExplicitLoadFromMemory();
             //LazyLoadQuotes();
             //ModifyRelatedDataWhenTracked();
-            ModifyRelatedDataWhenNotTracked();
+            //ModifyRelatedDataWhenNotTracked();
+
             //Console.Write("Press any key...");
             //Console.ReadKey();
+
+            //AddNewSamuraiToExistingBattle();
+            //ReturnBattleWithSamurai();
+            AddAllSamuraiToAllBattles();
+            ReturnBattleWithManySamurai();
         }
 
         /// <summary>
@@ -303,6 +310,39 @@ namespace SamuraiApp.UI
                 newContext.Entry(quote).State = EntityState.Modified; //State must be explicitly state when jumping context.
                 newContext.SaveChanges();
             }
+        }
+    
+        /// <summary>
+        /// Demo of adding many to many single value. Updates values in Samurai, Battle, and SamuraiBattle tables.
+        /// </summary>
+        private static void AddNewSamuraiToExistingBattle()
+        {
+            var battle = _context.Battles.FirstOrDefault();
+            battle.Samurais.Add(new Samurai { Name = "Seto Kaiba" });
+            _context.SaveChanges();
+        }
+
+        private static void ReturnBattleWithSamurai()
+        {
+            var battle = _context.Battles.Include(b => b.Samurais).FirstOrDefault();
+        }
+
+        private static void ReturnBattleWithManySamurai()
+        {
+            var battle = _context.Battles.Include(b => b.Samurais).ToList();
+        }
+
+        private static void AddAllSamuraiToAllBattles()
+        {
+            var battles = _context.Battles.Include(b => b.Samurais).ToList();
+            var samurais = _context.Samurais.ToList();
+
+            foreach (var battle in battles)
+            {
+                battle.Samurais.AddRange(samurais);
+            }
+
+            _context.SaveChanges();
         }
     }
 }
