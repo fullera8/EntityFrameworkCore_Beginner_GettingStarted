@@ -43,8 +43,9 @@ namespace SamuraiApp.UI
 
             //AddNewSamuraiToExistingBattle();
             //ReturnBattleWithSamurai();
-            AddAllSamuraiToAllBattles();
-            ReturnBattleWithManySamurai();
+            //AddAllSamuraiToAllBattles();
+            //ReturnBattleWithManySamurai();
+            RemoveSamuraiFromBattle();
         }
 
         /// <summary>
@@ -342,6 +343,19 @@ namespace SamuraiApp.UI
                 battle.Samurais.AddRange(samurais);
             }
 
+            _context.SaveChanges();
+        }
+
+        private static void RemoveSamuraiFromBattle()
+        {
+            var battleWithSamurai = _context.Battles
+                    .Include(b => b.Samurais
+                        .Where(s => s.Id == 12))
+                    .Single(s => s.BattleId == 1);
+            var samurai = battleWithSamurai.Samurais[0];
+            
+            battleWithSamurai.Samurais.Remove(samurai);
+            
             _context.SaveChanges();
         }
     }
