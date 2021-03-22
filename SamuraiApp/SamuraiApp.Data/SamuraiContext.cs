@@ -45,6 +45,8 @@ namespace SamuraiApp.Data
                     bs => bs.HasOne<Samurai>().WithMany())
                 .Property(bs => bs.DateJoined)
                 .HasDefaultValueSql("getdate()");//This property will need to populate by default so we need to give it specific behavior
+
+            modelBuilder.Entity<Horse>().ToTable("Horses");
         }
     }
 }

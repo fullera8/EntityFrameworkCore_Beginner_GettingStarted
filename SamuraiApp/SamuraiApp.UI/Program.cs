@@ -46,7 +46,10 @@ namespace SamuraiApp.UI
             //AddAllSamuraiToAllBattles();
             //ReturnBattleWithManySamurai();
             //RemoveSamuraiFromBattle();
-            RemoveSamuraiFromBattleExplicit();
+            //RemoveSamuraiFromBattleExplicit();
+            //AddNewSamuraiWithHorse();
+            //AddNewHorseToExistingSamurai();
+            GetHorseWithSamurai();
         }
 
         /// <summary>
@@ -370,6 +373,36 @@ namespace SamuraiApp.UI
                 _context.Remove(battleWithSamurai);
                 _context.SaveChanges();
             }
+        }
+
+        private static void AddNewSamuraiWithHorse()
+        {
+            var samurai = new Samurai { Name = "Joey Wheeler" };
+            samurai.Horse = new Horse { Name = "Baby Dragon" };
+
+            _context.Samurais.Add(samurai);
+            _context.SaveChanges();
+        }
+
+        private static void AddNewHorseToExistingSamurai()
+        {
+            var horse = new Horse { Name = "Bullseye", SamuraiId = 2 };
+
+            _context.Add(horse);
+            _context.SaveChanges();
+        }
+
+        private static void GetHorseWithSamurai()
+        {
+            var horseOnly = _context.Set<Horse>().Find(3);
+
+            var horseWithSamurai = _context.Samurais.Include(s => s.Horse)
+                .FirstOrDefault(s => s.Horse.Id == 3);
+
+            var horseSamuraiPairs = _context.Samurais
+                .Where(s => s.Horse != null)
+                .Select(s => new { Horse = s.Horse, Samurai = s })
+                .ToList();
         }
     }
 }
