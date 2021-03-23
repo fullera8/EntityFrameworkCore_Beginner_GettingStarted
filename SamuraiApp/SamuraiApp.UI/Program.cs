@@ -51,9 +51,10 @@ namespace SamuraiApp.UI
             //AddNewHorseToExistingSamurai();
             //GetHorseWithSamurai();
             //QuerySamuraiBattleStats();
-            
-            QueryRawSql();
-            QueryRawIntrepolationSql();
+
+            //QueryRawSql();
+            //QueryRawIntrepolationSql();
+            QueryRawSqlStroredProc();
         }
 
         /// <summary>
@@ -431,6 +432,12 @@ namespace SamuraiApp.UI
             var samurais = _context.Samurais
                 .FromSqlInterpolated($"SELECT TOP 10 * FROM samurais WHERE Name = {name}")
                 .ToList();
+        }
+
+        private static void QueryRawSqlStroredProc()
+        {
+            var text = "Dinner";
+            var samurais = _context.Samurais.FromSqlInterpolated($"EXEC dbo.SamuraisWhoSaidAWord {text}").ToList();
         }
     }
 }
