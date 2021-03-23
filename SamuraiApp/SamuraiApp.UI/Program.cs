@@ -49,7 +49,8 @@ namespace SamuraiApp.UI
             //RemoveSamuraiFromBattleExplicit();
             //AddNewSamuraiWithHorse();
             //AddNewHorseToExistingSamurai();
-            GetHorseWithSamurai();
+            //GetHorseWithSamurai();
+            QuerySamuraiBattleStats();
         }
 
         /// <summary>
@@ -403,6 +404,13 @@ namespace SamuraiApp.UI
                 .Where(s => s.Horse != null)
                 .Select(s => new { Horse = s.Horse, Samurai = s })
                 .ToList();
+        }
+
+        private static void QuerySamuraiBattleStats() 
+        {
+            var stats = _context.SamuraiBattleStats.ToList();
+            var firstStat = _context.SamuraiBattleStats.FirstOrDefault();
+            var alexStat = _context.SamuraiBattleStats.FirstOrDefault(b => b.Name == "Alex");
         }
     }
 }
