@@ -14,6 +14,7 @@ namespace SamuraiApp.Data
         public DbSet<Samurai> Samurais { get; set; }
         public DbSet<Quote> Quotes { get; set; }
         public DbSet<Battle> Battles { get; set; }
+        public DbSet<SamuraiBattleStat> SamuraiBattleStats { get; set; }
 
         /// <summary>
         /// Now required to tell the app specifically what to connect to. Abstracted connections are now gone.
@@ -47,6 +48,7 @@ namespace SamuraiApp.Data
                 .HasDefaultValueSql("getdate()");//This property will need to populate by default so we need to give it specific behavior
 
             modelBuilder.Entity<Horse>().ToTable("Horses");
+            modelBuilder.Entity<SamuraiBattleStat>().HasNoKey().ToView("SamuraiBattleStats"); //This is required when there is no PK or FK
         }
     }
 }
