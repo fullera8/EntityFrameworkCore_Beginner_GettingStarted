@@ -54,7 +54,8 @@ namespace SamuraiApp.UI
 
             //QueryRawSql();
             //QueryRawIntrepolationSql();
-            QueryRawSqlStroredProc();
+            //QueryRawSqlStroredProc();
+            QueryRawSqlStroredProcDeleteQuotes();
         }
 
         /// <summary>
@@ -438,6 +439,13 @@ namespace SamuraiApp.UI
         {
             var text = "Dinner";
             var samurais = _context.Samurais.FromSqlInterpolated($"EXEC dbo.SamuraisWhoSaidAWord {text}").ToList();
+        }
+
+        private static void QueryRawSqlStroredProcDeleteQuotes()
+        {
+            var samuraiId = 2;
+            //Note to run a procedure against the db with no return expected, run "Database" infratructure "ExecuteSql" mehtod.
+            var samurais = _context.Database.ExecuteSqlInterpolated($"EXEC DeleteQuotesForSamurai {samuraiId}");
         }
     }
 }
