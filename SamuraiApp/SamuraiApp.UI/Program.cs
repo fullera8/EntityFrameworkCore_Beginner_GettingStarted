@@ -50,7 +50,10 @@ namespace SamuraiApp.UI
             //AddNewSamuraiWithHorse();
             //AddNewHorseToExistingSamurai();
             //GetHorseWithSamurai();
-            QuerySamuraiBattleStats();
+            //QuerySamuraiBattleStats();
+            
+            QueryRawSql();
+            QueryRawIntrepolationSql();
         }
 
         /// <summary>
@@ -411,6 +414,23 @@ namespace SamuraiApp.UI
             var stats = _context.SamuraiBattleStats.ToList();
             var firstStat = _context.SamuraiBattleStats.FirstOrDefault();
             var alexStat = _context.SamuraiBattleStats.FirstOrDefault(b => b.Name == "Alex");
+        }
+
+        private static void QueryRawSql()
+        {
+            //Note the SQL commands have been updated to new methods to make the ExecuteSQL command unnecessary. Review EF Core 3.1 for reference to the latest SQL commands
+            //This must reflect the object it goes into. AKA no projection unless you create an anonymous object with only those properties.
+            var samurais = _context.Samurais.FromSqlRaw("SELECT TOP 10 * FROM samurais").ToList();
+        }
+
+        private static void QueryRawIntrepolationSql()
+        {
+            //Behaves similar to raw sql but strings can be passed in. 
+            //IMPORTANT: Use this when passing parameters, if raw sql is used with params it opens the request up to SQL Injection.
+            var name = "Alex";
+            var samurais = _context.Samurais
+                .FromSqlInterpolated($"SELECT TOP 10 * FROM samurais WHERE Name = {name}")
+                .ToList();
         }
     }
 }
