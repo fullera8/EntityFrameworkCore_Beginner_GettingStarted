@@ -55,7 +55,7 @@ namespace SamuraiApp.UI
             //QueryRawSql();
             //QueryRawIntrepolationSql();
             //QueryRawSqlStroredProc();
-            QueryRawSqlStroredProcDeleteQuotes();
+            //QueryRawSqlStroredProcDeleteQuotes();
         }
 
         /// <summary>
